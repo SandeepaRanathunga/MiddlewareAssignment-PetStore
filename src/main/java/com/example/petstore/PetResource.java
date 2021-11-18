@@ -52,7 +52,7 @@ public class PetResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPet(Pet pet) {
         if(this.findPetById(pet.getPetId())!=null){
-            return Response.status(Status.BAD_REQUEST).build();
+            return Response.status(Status.CONFLICT).build();
         }
         this.pets.add(pet);
         return Response.ok(pet).build();
@@ -65,19 +65,24 @@ public class PetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updatePet(Pet pet,@PathParam("petId") int petId) {
-        for (Pet singlePet : this.pets) {
-            if (singlePet.getPetId() == petId) {
-
-                return Response.ok(pet).build();
+        for (Pet currentPet : this.pets) {
+            if (currentPet.getPetId() == petId) {
+                if(pet.getPetName()!=null)
+                    currentPet.setPetName(pet.getPetName());
+                if(pet.getPetAge()!=null)
+                    currentPet.setPetAge(pet.getPetAge());
+                if(pet.getPetType()!=null)
+                    currentPet.setPetType(pet.getPetType());
+                return Response.ok(currentPet).build();
             }
         }
-        return Response.status(Status.CONFLICT).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     private Pet findPetById(int petId){
-        for (Pet singlePet : this.pets) {
-            if (singlePet.getPetId() == petId) {
-                return singlePet;
+        for (Pet currentPet : this.pets) {
+            if (currentPet.getPetId() == petId) {
+                return currentPet;
             }
         }
         return null;
