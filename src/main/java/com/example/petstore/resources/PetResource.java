@@ -79,7 +79,7 @@ public class PetResource {
     private Response findByType(String petType) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
-            if (currentPet.getPetType().equals(petType)) {
+            if (currentPet.getPetType().getName().equals(petType)) {
                 matchedPets.add(currentPet);
             }
         }
@@ -110,11 +110,7 @@ public class PetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPet(Pet pet) {
-        if (this.findPetById(pet.getPetId()) != null) {
-            return Response.status(Status.CONFLICT)
-                    .entity(new ExceptionStatus(409, "Id already exists"))
-                    .build();
-        }
+        pet.setPetId(this.pets.size()+1);
         this.pets.add(pet);
         return Response.ok(pet).build();
     }

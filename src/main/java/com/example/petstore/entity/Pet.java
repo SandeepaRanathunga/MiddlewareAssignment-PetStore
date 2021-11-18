@@ -13,7 +13,7 @@ public class Pet {
 
 	@Schema(required = true, description = "Pet type")
 	@JsonProperty("pet_type")
-	private String petType;
+	private PetType petType;
 
 	@Schema(required = true, description = "Pet name")
 	@JsonProperty("pet_name")
@@ -30,11 +30,11 @@ public class Pet {
 		this.petId = petId;
 	}
 
-	public String getPetType() {
+	public PetType getPetType() {
 		return petType;
 	}
 
-	public void setPetType(String petType) {
+	public void setPetType(PetType petType) {
 		this.petType = petType;
 	}
 

@@ -18,6 +18,7 @@ public class PetTypeResource {
     public PetTypeResource() {
         this.petTypes = new ArrayList<PetType>();
     }
+
     @GET
     @Schema(ref = "PetType")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,11 +50,7 @@ public class PetTypeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPetType(PetType petType) {
-        if (this.findPetTypeById(petType.getId()) != null) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(new ExceptionStatus(409, "Id already exists"))
-                    .build();
-        }
+        petType.setId(this.petTypes.size() + 1);
         this.petTypes.add(petType);
         return Response.ok(petType).build();
     }
