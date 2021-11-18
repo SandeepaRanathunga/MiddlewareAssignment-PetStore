@@ -42,7 +42,7 @@ public class PetResource {
     }
 
 //    find by name
-    public Response findByName(String petName) {
+    private Response findByName(String petName) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
             if (currentPet.getPetName().equals(petName)) {
@@ -56,7 +56,7 @@ public class PetResource {
     }
 
 //    find by age
-    public Response findByAge(int petAge) {
+    private Response findByAge(int petAge) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
             if (currentPet.getPetAge() == petAge) {
@@ -70,7 +70,7 @@ public class PetResource {
     }
 
 //    find by type
-    public Response findByType(String petType) {
+    private Response findByType(String petType) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
             if (currentPet.getPetType().equals(petType)) {
