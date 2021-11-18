@@ -22,10 +22,9 @@ public class PetResource {
     public PetResource() {
         this.pets = new ArrayList<Pet>();
     }
-
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "All Pets", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(ref = "Pet")))})
     @GET
+    @Schema(ref = "Pet")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getPets(@QueryParam("petName") String petName,
                             @QueryParam("petAge") int petAge,
                             @QueryParam("petType") String petType
@@ -92,10 +91,9 @@ public class PetResource {
                 .build();
     }
 
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Pet for id", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(ref = "Pet"))),
-            @APIResponse(responseCode = "404", description = "No Pet found for the id.")})
     @GET
+    @Schema(ref = "Pet")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("{petId}")
     public Response getPet(@PathParam("petId") int petId) {
         Pet pet = this.findPetById(petId);
@@ -107,7 +105,6 @@ public class PetResource {
                 .build();
     }
 
-    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Add Pet")})
     @POST
     @Schema(ref = "Pet")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -122,7 +119,6 @@ public class PetResource {
         return Response.ok(pet).build();
     }
 
-    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Add Pet")})
     @PUT
     @Path("{petId}")
     @Schema(ref = "Pet")
@@ -145,10 +141,8 @@ public class PetResource {
                 .build();
     }
 
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Pet for id", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(ref = "Pet"))),
-            @APIResponse(responseCode = "404", description = "No Pet found for the id.")})
     @DELETE
+    @Schema(ref = "Pet")
     @Path("{petId}")
     public Response deletePet(@PathParam("petId") int petId) {
         Pet pet = this.findPetById(petId);
