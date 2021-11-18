@@ -26,10 +26,61 @@ public class PetResource {
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "All Pets", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(ref = "Pet")))})
     @GET
-    public Response getPets() {
+    public Response getPets(@QueryParam("petName") String petName,
+                            @QueryParam("petAge") int petAge,
+                            @QueryParam("petType") String petType
+    ) {
+        if (petName != null)
+            return this.findByName(petName);
+        if (petAge != 0)
+            return this.findByAge(petAge);
+        if (petType != null)
+            return this.findByType(petType);
         if (this.pets.size() == 0)
             return Response.status(Status.NOT_FOUND).build();
         return Response.ok(this.pets).build();
+    }
+
+//    find by name
+    public Response findByName(String petName) {
+        List<Pet> matchedPets = new ArrayList<Pet>();
+        for (Pet currentPet : this.pets) {
+            if (currentPet.getPetName().equals(petName)) {
+                matchedPets.add(currentPet);
+            }
+        }
+        if (matchedPets.size() > 0) {
+            return Response.ok(matchedPets).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+//    find by age
+    public Response findByAge(int petAge) {
+        List<Pet> matchedPets = new ArrayList<Pet>();
+        for (Pet currentPet : this.pets) {
+            if (currentPet.getPetAge() == petAge) {
+                matchedPets.add(currentPet);
+            }
+        }
+        if (matchedPets.size() > 0) {
+            return Response.ok(matchedPets).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+//    find by type
+    public Response findByType(String petType) {
+        List<Pet> matchedPets = new ArrayList<Pet>();
+        for (Pet currentPet : this.pets) {
+            if (currentPet.getPetType().equals(petType)) {
+                matchedPets.add(currentPet);
+            }
+        }
+        if (matchedPets.size() > 0) {
+            return Response.ok(matchedPets).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @APIResponses(value = {
@@ -38,8 +89,8 @@ public class PetResource {
     @GET
     @Path("{petId}")
     public Response getPet(@PathParam("petId") int petId) {
-        Pet pet=this.findPetById(petId);
-        if(pet !=null){
+        Pet pet = this.findPetById(petId);
+        if (pet != null) {
             return Response.ok(pet).build();
         }
         return Response.status(Status.NOT_FOUND).build();
@@ -51,7 +102,7 @@ public class PetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPet(Pet pet) {
-        if(this.findPetById(pet.getPetId())!=null){
+        if (this.findPetById(pet.getPetId()) != null) {
             return Response.status(Status.CONFLICT).build();
         }
         this.pets.add(pet);
@@ -64,14 +115,14 @@ public class PetResource {
     @Schema(ref = "Pet")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updatePet(Pet pet,@PathParam("petId") int petId) {
+    public Response updatePet(Pet pet, @PathParam("petId") int petId) {
         for (Pet currentPet : this.pets) {
             if (currentPet.getPetId() == petId) {
-                if(pet.getPetName()!=null)
+                if (pet.getPetName() != null)
                     currentPet.setPetName(pet.getPetName());
-                if(pet.getPetAge()!=null)
+                if (pet.getPetAge() != null)
                     currentPet.setPetAge(pet.getPetAge());
-                if(pet.getPetType()!=null)
+                if (pet.getPetType() != null)
                     currentPet.setPetType(pet.getPetType());
                 return Response.ok(currentPet).build();
             }
@@ -79,7 +130,22 @@ public class PetResource {
         return Response.status(Status.NOT_FOUND).build();
     }
 
-    private Pet findPetById(int petId){
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Pet for id", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(ref = "Pet"))),
+            @APIResponse(responseCode = "404", description = "No Pet found for the id.")})
+    @DELETE
+    @Path("{petId}")
+    public Response deletePet(@PathParam("petId") int petId) {
+        Pet pet = this.findPetById(petId);
+        if (pet != null) {
+            pets.remove(pet);
+            return Response.ok(pet).build();
+        }
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+//    find by id
+    private Pet findPetById(int petId) {
         for (Pet currentPet : this.pets) {
             if (currentPet.getPetId() == petId) {
                 return currentPet;
@@ -87,4 +153,5 @@ public class PetResource {
         }
         return null;
     }
+
 }
