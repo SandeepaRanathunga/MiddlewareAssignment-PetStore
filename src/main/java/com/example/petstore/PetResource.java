@@ -37,11 +37,14 @@ public class PetResource {
         if (petType != null)
             return this.findByType(petType);
         if (this.pets.size() == 0)
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(Status.NOT_FOUND)
+                    .entity(new ExceptionStatus(404, "Records not found"))
+                    .build();
+
         return Response.ok(this.pets).build();
     }
 
-//    find by name
+    //    find by name
     private Response findByName(String petName) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
@@ -52,10 +55,12 @@ public class PetResource {
         if (matchedPets.size() > 0) {
             return Response.ok(matchedPets).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.NOT_FOUND)
+                .entity(new ExceptionStatus(404, "Matching records not found"))
+                .build();
     }
 
-//    find by age
+    //    find by age
     private Response findByAge(int petAge) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
@@ -66,10 +71,12 @@ public class PetResource {
         if (matchedPets.size() > 0) {
             return Response.ok(matchedPets).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.NOT_FOUND)
+                .entity(new ExceptionStatus(404, "Matching records not found"))
+                .build();
     }
 
-//    find by type
+    //    find by type
     private Response findByType(String petType) {
         List<Pet> matchedPets = new ArrayList<Pet>();
         for (Pet currentPet : this.pets) {
@@ -80,7 +87,9 @@ public class PetResource {
         if (matchedPets.size() > 0) {
             return Response.ok(matchedPets).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.NOT_FOUND)
+                .entity(new ExceptionStatus(404, "Matching records not found"))
+                .build();
     }
 
     @APIResponses(value = {
@@ -93,7 +102,9 @@ public class PetResource {
         if (pet != null) {
             return Response.ok(pet).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.NOT_FOUND)
+                .entity(new ExceptionStatus(404, "No records found for Id"))
+                .build();
     }
 
     @APIResponses(value = {@APIResponse(responseCode = "200", description = "Add Pet")})
@@ -103,7 +114,9 @@ public class PetResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPet(Pet pet) {
         if (this.findPetById(pet.getPetId()) != null) {
-            return Response.status(Status.CONFLICT).build();
+            return Response.status(Status.CONFLICT)
+                    .entity(new ExceptionStatus(409, "Id already exists"))
+                    .build();
         }
         this.pets.add(pet);
         return Response.ok(pet).build();
@@ -127,7 +140,9 @@ public class PetResource {
                 return Response.ok(currentPet).build();
             }
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.NOT_FOUND)
+                .entity(new ExceptionStatus(404, "No records found for Id"))
+                .build();
     }
 
     @APIResponses(value = {
@@ -141,10 +156,12 @@ public class PetResource {
             pets.remove(pet);
             return Response.ok(pet).build();
         }
-        return Response.status(Status.NOT_FOUND).build();
+        return Response.status(Status.NOT_FOUND)
+                .entity(new ExceptionStatus(404, "No records found for Id"))
+                .build();
     }
 
-//    find by id
+    //    find by id
     private Pet findPetById(int petId) {
         for (Pet currentPet : this.pets) {
             if (currentPet.getPetId() == petId) {
