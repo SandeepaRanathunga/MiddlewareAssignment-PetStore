@@ -17,34 +17,18 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 @Produces("application/json")
 public class PetResource {
 
-    private List<Pet> pets = new ArrayList<Pet>();
+    private List<Pet> pets;
+
+    public PetResource() {
+        this.pets = new ArrayList<Pet>();
+    }
 
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "All Pets", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(ref = "Pet")))})
     @GET
     public Response getPets() {
-
-        Pet pet1 = new Pet();
-        pet1.setPetId(1);
-        pet1.setPetAge(3);
-        pet1.setPetName("Boola");
-        pet1.setPetType("Dog");
-
-        Pet pet2 = new Pet();
-        pet2.setPetId(2);
-        pet2.setPetAge(4);
-        pet2.setPetName("Sudda");
-        pet2.setPetType("Cat");
-
-        Pet pet3 = new Pet();
-        pet3.setPetId(3);
-        pet3.setPetAge(2);
-        pet3.setPetName("Peththappu");
-        pet3.setPetType("Bird");
-
-        this.pets.add(pet1);
-        this.pets.add(pet2);
-        this.pets.add(pet3);
+        if (this.pets.size() == 0)
+            return Response.status(Status.NOT_FOUND).build();
         return Response.ok(this.pets).build();
     }
 
@@ -54,27 +38,48 @@ public class PetResource {
     @GET
     @Path("{petId}")
     public Response getPet(@PathParam("petId") int petId) {
-        if (petId < 0) {
-            return Response.status(Status.NOT_FOUND).build();
+        Pet pet=this.findPetById(petId);
+        if(pet !=null){
+            return Response.ok(pet).build();
         }
-        Pet pet = new Pet();
-        pet.setPetId(petId);
-        pet.setPetAge(3);
-        pet.setPetName("Buula");
-        pet.setPetType("Dog");
-
-        return Response.ok(pet).build();
-
+        return Response.status(Status.NOT_FOUND).build();
     }
 
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Add Pet")})
+    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Add Pet")})
     @POST
     @Schema(ref = "Pet")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPet(Pet pet) {
+        if(this.findPetById(pet.getPetId())!=null){
+            return Response.status(Status.BAD_REQUEST).build();
+        }
         this.pets.add(pet);
         return Response.ok(pet).build();
+    }
+
+    @APIResponses(value = {@APIResponse(responseCode = "200", description = "Add Pet")})
+    @PUT
+    @Path("{petId}")
+    @Schema(ref = "Pet")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updatePet(Pet pet,@PathParam("petId") int petId) {
+        for (Pet singlePet : this.pets) {
+            if (singlePet.getPetId() == petId) {
+
+                return Response.ok(pet).build();
+            }
+        }
+        return Response.status(Status.CONFLICT).build();
+    }
+
+    private Pet findPetById(int petId){
+        for (Pet singlePet : this.pets) {
+            if (singlePet.getPetId() == petId) {
+                return singlePet;
+            }
+        }
+        return null;
     }
 }
