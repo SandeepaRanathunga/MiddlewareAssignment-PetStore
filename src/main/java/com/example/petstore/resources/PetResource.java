@@ -1,4 +1,4 @@
-package com.example.petstore;
+package com.example.petstore.resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.eclipse.microprofile.openapi.annotations.media.Content;
+import com.example.petstore.exceptions.ExceptionStatus;
+import com.example.petstore.entity.Pet;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+
 
 @Path("/v1/pets")
 @Produces("application/json")

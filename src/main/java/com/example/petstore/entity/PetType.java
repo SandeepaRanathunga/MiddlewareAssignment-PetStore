@@ -1,4 +1,4 @@
-package com.example.petstore;
+package com.example.petstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;

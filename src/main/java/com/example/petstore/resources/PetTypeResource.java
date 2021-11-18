@@ -1,5 +1,7 @@
-package com.example.petstore;
+package com.example.petstore.resources;
 
+import com.example.petstore.exceptions.ExceptionStatus;
+import com.example.petstore.entity.PetType;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import javax.ws.rs.*;

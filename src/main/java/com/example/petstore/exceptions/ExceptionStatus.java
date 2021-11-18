@@ -1,4 +1,4 @@
-package com.example.petstore;
+package com.example.petstore.exceptions;
 
 public class ExceptionStatus {
     private int code;
